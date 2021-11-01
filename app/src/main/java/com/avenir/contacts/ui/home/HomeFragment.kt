@@ -10,6 +10,8 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
@@ -33,7 +35,9 @@ class HomeFragment : Fragment() {
     ): View? {
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
-        val listView : ListView = root.findViewById(R.id.contact_list) as ListView
+        val itemView = inflater.inflate(R.layout.contact_row, container, false)
+        val listView : RecyclerView = root.findViewById(R.id.contact_list) as RecyclerView
+        val layoutManager : RecyclerView.LayoutManager = LinearLayoutManager(activity)
         val queue = Volley.newRequestQueue(activity)
         val url = "https://api.github.com/users"
         contactArray = ArrayList()
@@ -52,8 +56,9 @@ class HomeFragment : Fragment() {
 
                         contactArray.add(contact)
                     }
-
+                    listView.layoutManager = layoutManager
                     listView.adapter = ContactAdapter(requireActivity(), contactArray)
+//
                 },
                 { Log.i("request status", "error") })
 
